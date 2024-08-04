@@ -7,6 +7,8 @@ import Link from "next/link";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailNotFound, setEmailNotFound] = useState(false);
+  const [passwordIncorrect, setPasswordIncorrect] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +20,7 @@ export default function SignIn() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-2xl p-4 flex flex-col items-center">
+      <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
         <h1 className="font-semibold text-xl">Sign In</h1>
         <form
           onSubmit={handleSubmit}
@@ -37,6 +39,7 @@ export default function SignIn() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {emailNotFound && <p className="text-red-500">Email not found</p>}
           </label>
           <label className="md:w-1/2 grid grid-rows-2">
             <div>Password</div>
@@ -49,6 +52,12 @@ export default function SignIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {passwordIncorrect && (
+              <p className="text-red-500">Incorrect password</p>
+            )}
+            <Link className="text-blue-400 text-right" href="/forgot-password">
+              Forgot Password?
+            </Link>
           </label>
           <button
             type="submit"
@@ -63,7 +72,7 @@ export default function SignIn() {
         </button>
       </div>
       <p>
-        <span className="text-red-400">Don't have an account? &nbsp;</span>
+        <span>Don't have an account? &nbsp;</span>
         <Link className="text-blue-400" href="/sign-up">
           Sign Up
         </Link>

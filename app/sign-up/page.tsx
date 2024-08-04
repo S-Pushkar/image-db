@@ -9,6 +9,8 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailTaken, setEmailTaken] = useState(false);
+  const [passwordNotMatch, setPasswordNotMatch] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ export default function SignUp() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-2xl p-4 flex flex-col items-center">
+      <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
         <h1 className="font-semibold text-xl">Sign Up</h1>
         <form
           onSubmit={handleSubmit}
@@ -56,6 +58,9 @@ export default function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {emailTaken && (
+              <p className="text-red-500">Account already exists</p>
+            )}
           </label>
           <label className="md:w-1/2 grid grid-rows-2">
             <div>Password</div>
@@ -80,6 +85,9 @@ export default function SignUp() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
+            {passwordNotMatch && (
+              <p className="text-red-500">Passwords do not match</p>
+            )}
           </label>
           <button
             type="submit"
