@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import SessionWrapper from "@/components/session-wrapper";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,14 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html className="bg-[rgb(25,25,25)] text-white" lang="en">
       <body className={inter.className}>
-        <h1 className="font-bold m-4 text-center text-3xl md:text-5xl">Image DB</h1>
-        {children}
+        <Navbar />
+        <SessionWrapper>{children}</SessionWrapper>
       </body>
     </html>
   );

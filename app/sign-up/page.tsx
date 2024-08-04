@@ -3,8 +3,15 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
 
 export default function SignUp() {
+  const { data: session } = useSession();
+  const Router = useRouter();
+  if (session) {
+    Router.push("/");
+  }
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -97,7 +104,12 @@ export default function SignUp() {
           </button>
         </form>
         <p>Or Sign Up With</p>
-        <button className="rounded-full m-4">
+        <button
+          className="rounded-full m-4"
+          onClick={() =>
+            signIn("google", { callbackUrl: "http://localhost:3000" })
+          }
+        >
           <Image src="/assets/google.svg" width={50} height={50} alt="Google" />
         </button>
       </div>
