@@ -1,7 +1,5 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import dbConnect from "@/db/connect";
-import users from "@/schemas/users";
 
 const handler = NextAuth({
   providers: [
@@ -16,29 +14,16 @@ const handler = NextAuth({
         return false;
       }
 
-      try {
-        await dbConnect();
-        const existingUser = await users.findOne({ email: user.email });
-
-        if (existingUser) {
-          return existingUser.password === "";
-        }
-
-        if (!user.name) {
-          user.name = user.email.split("@")[0];
-        }
-
-        const newUser = new users({
-          name: user.name,
+      const response = await fetch(process.env.SPRING_API_URL + "/auth/nextauth-sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           email: user.email,
-        });
+          name: user.name,
+        }),
+      });
 
-        await newUser.save();
-        return true;
-      } catch (error) {
-        console.error("Error in signIn callback:", error);
-        return false;
-      }
+      return response.ok;
     },
     async jwt({ token, user }) {
       if (user) {
