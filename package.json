@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cookies-next": "^4.2.1",
     "mongoose": "^8.5.2",
     "next": "14.2.5",
     "next-auth": "^4.24.7",

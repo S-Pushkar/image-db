@@ -5,24 +5,46 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
+import { getCookie, setCookie } from "cookies-next";
+
 
 export default function SignIn() {
   const { data: session } = useSession();
   const Router = useRouter();
-  if (session) {
+  if (session || getCookie("token")) {
     Router.push("/");
   }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [invalidEmail, setInvalidEmail] = useState(false);
   const [emailNotFound, setEmailNotFound] = useState(false);
   const [passwordIncorrect, setPasswordIncorrect] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add your form submission logic here
-    // Example: send data to an API endpoint
     const data = { email, password };
-    // You can use fetch or axios to send the data to your API
+    const response  = await fetch("http://localhost:8080/api/auth/sign-in", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    if (response.ok) {
+      const token = responseData.token;
+      setCookie("token", token);
+      Router.push("/");      
+    } else if (responseData.message === "User not found") {
+      setEmailNotFound(true);
+      setEmail("");
+      setPassword("");
+    } else if (responseData.message === "Invalid email") {
+      setInvalidEmail(true);
+      setEmail("");
+      setPassword("");
+    } else {
+      setPasswordIncorrect(true);
+      setPassword("");
+    }
   };
 
   return (
@@ -47,6 +69,7 @@ export default function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailNotFound && <p className="text-red-500">Email not found</p>}
+            {invalidEmail && <p className="text-red-500">Invalid email</p>}
           </label>
           <label className="md:w-1/2 grid grid-rows-2">
             <div>Password</div>
@@ -69,6 +92,7 @@ export default function SignIn() {
           <button
             type="submit"
             className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            onClick={(e) => {setInvalidEmail(false); setEmailNotFound(false); setPasswordIncorrect(false)}}
           >
             Sign In
           </button>

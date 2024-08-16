@@ -5,11 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
+import { getCookie, setCookie } from "cookies-next";
 
 export default function SignUp() {
   const { data: session } = useSession();
   const Router = useRouter();
-  if (session) {
+  if (session || getCookie("token")) {
     Router.push("/");
   }
   const [name, setName] = useState("");
@@ -18,17 +19,62 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailTaken, setEmailTaken] = useState(false);
   const [passwordNotMatch, setPasswordNotMatch] = useState(false);
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [invalidName, setInvalidName] = useState(false);
+  const [invalidPassword, setInvalidPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
+    if (name === "") {
+      setInvalidName(true);
       return;
     }
-    // Add your form submission logic here
-    // Example: send data to an API endpoint
-    const data = { name, email, password, confirmPassword };
-    // You can use fetch or axios to send the data to your API
+    if (email === "") {
+      setInvalidEmail(true);
+      return;
+    }
+    if (password === "") {
+      setInvalidPassword(true);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setPasswordNotMatch(true);
+      setPassword("");
+      setConfirmPassword("");
+      return;
+    }
+    const data = { name, email, password };
+    const response = await fetch("http://localhost:8080/api/auth/sign-up", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    if (response.ok) {
+      const token = responseData.token;
+      setCookie("token", token);
+      Router.push("/");
+    } else if (responseData.message === "User already exists") {
+      setEmailTaken(true);
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    } else if (responseData.message === "Invalid email") {
+      setInvalidEmail(true);
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    } else if (responseData.message === "Invalid password") {
+      setInvalidPassword(true);
+      setPassword("");
+      setConfirmPassword("");
+    } else {
+      setInvalidName(true);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    }
   };
 
   return (
@@ -52,6 +98,7 @@ export default function SignUp() {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            {invalidName && <p className="text-red-500">Invalid Name</p>}
           </label>
           <label className="md:w-1/2 grid grid-rows-2">
             <div>Email</div>
@@ -68,6 +115,7 @@ export default function SignUp() {
             {emailTaken && (
               <p className="text-red-500">Account already exists</p>
             )}
+            {invalidEmail && <p className="text-red-500">Invalid email</p>}
           </label>
           <label className="md:w-1/2 grid grid-rows-2">
             <div>Password</div>
@@ -80,6 +128,9 @@ export default function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {invalidPassword && (
+              <p className="text-red-500">Invalid password</p>
+            )}
           </label>
           <label className="md:w-1/2 grid grid-rows-2">
             <div>Confirm Password</div>
@@ -99,6 +150,13 @@ export default function SignUp() {
           <button
             type="submit"
             className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            onClick={(e) => {
+              setEmailTaken(false);
+              setPasswordNotMatch(false);
+              setInvalidEmail(false);
+              setInvalidName(false);
+              setInvalidPassword(false);
+            }}
           >
             Sign Up
           </button>
