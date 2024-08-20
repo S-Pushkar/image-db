@@ -22,6 +22,9 @@ export default function SignInComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setEmailNotFound(false);
+    setInvalidEmail(false);
+    setPasswordIncorrect(false);
     const data = { email, password };
     const response  = await fetch(process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-in", {
       method: "POST",
@@ -31,7 +34,11 @@ export default function SignInComponent() {
     const responseData = await response.json();
     if (response.ok) {
       const token = responseData.token;
+      const userName = responseData.userName;
+      const userEmail = responseData.userEmail;
       setCookie("token", token);
+      setCookie("userName", userName);
+      setCookie("userEmail", userEmail);
       Router.push("/");      
     } else if (responseData.message === "User not found") {
       setEmailNotFound(true);

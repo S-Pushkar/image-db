@@ -25,6 +25,11 @@ export default function SignUpComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setEmailTaken(false);
+    setPasswordNotMatch(false);
+    setInvalidEmail(false);
+    setInvalidName(false);
+    setInvalidPassword(false);
     if (name === "") {
       setInvalidName(true);
       return;
@@ -52,6 +57,10 @@ export default function SignUpComponent() {
     const responseData = await response.json();
     if (response.ok) {
       const token = responseData.token;
+      const userName = responseData.userName;
+      const userEmail = responseData.userEmail;
+      setCookie("userName", userName);
+      setCookie("userEmail", userEmail);
       setCookie("token", token);
       Router.push("/");
     } else if (responseData.message === "User already exists") {

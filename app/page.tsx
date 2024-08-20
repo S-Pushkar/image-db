@@ -1,19 +1,32 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { getCookie, setCookie } from "cookies-next";
 
 export default function Home() {
   const { data: session } = useSession();
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    if (session) {
+      setEmail(session.user?.email || "");
+      setName(session.user?.name || "");
+    } else {
+      setToken(getCookie("token") || "");
+      setEmail(getCookie("userEmail") || "");
+      setName(getCookie("userName") || "");
+    }
+  }, [session]);
   return (
     <div>
       <h1>Home</h1>
-      {session || getCookie("token") ? (
+      {session || token ? (
         <div>
           <p>
-            Signed in as {session && session.user?.email},{" "}
-            {session && session.user?.name}
+            Signed in as {email},{" "}
+            {name}
           </p>
           <button
             onClick={
@@ -21,6 +34,8 @@ export default function Home() {
                 ? () => signOut()
                 : () => {
                     setCookie("token", "");
+                    setCookie("userName", "");
+                    setCookie("userEmail", "");
                     window.location.reload();
                   }
             }

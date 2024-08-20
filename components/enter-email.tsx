@@ -1,15 +1,42 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function EnterEmailComponent() {
+  const Router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add your code here
+    setInvalidEmail(false);
+    setEmailNotFound(false);
+    setOtpSent(false);
+    setNoPassword(false);
+    const response = await fetch(process.env.NEXT_PUBLIC_SPRING_API_URL + "/forgot-password/enter-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    const responseJson = await response.json();
+    const message = responseJson.message;
+    if (message === "Invalid email") {
+      setInvalidEmail(true);
+    } else if (message === "User not found") {
+      setEmailNotFound(true);
+    } else if (message === "OTP already sent") {
+      setOtpSent(true);
+    } else if (message === "User has no password") {
+      setNoPassword(true);
+    } else {
+      Router.push("/enter-otp");
+    }
   };
   const [email, setEmail] = useState("");
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [emailNotFound, setEmailNotFound] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [noPassword, setNoPassword] = useState(false);
   return (
     <div className="flex flex-col items-center">
       <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
@@ -33,6 +60,8 @@ export default function EnterEmailComponent() {
             />
             {emailNotFound && <p className="text-red-500">Email not found</p>}
             {invalidEmail && <p className="text-red-500">Invalid email</p>}
+            {otpSent && <p className="text-red-500">OTP already sent</p>}
+            {noPassword && <p className="text-red-500">Please sign in with Google</p>}
           </label>
           <button
             type="submit"
