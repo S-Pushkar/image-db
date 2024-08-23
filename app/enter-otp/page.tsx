@@ -1,9 +1,10 @@
 import React from "react";
+import EnterOtpComponent from "@/components/enter-otp";
 
-export default function EnterOtpComponent() {
+export default function EnterOtp() {
   return (
     <div>
-      <h1>Enter OTP</h1>
+      <EnterOtpComponent />
     </div>
   );
 }

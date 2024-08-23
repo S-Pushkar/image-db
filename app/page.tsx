@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { getCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -33,9 +33,12 @@ export default function Home() {
               session
                 ? () => signOut()
                 : () => {
-                    setCookie("token", "");
-                    setCookie("userName", "");
-                    setCookie("userEmail", "");
+                    // setCookie("token", "");
+                    // setCookie("userName", "");
+                    // setCookie("userEmail", "");
+                    deleteCookie("token");
+                    deleteCookie("userName");
+                    deleteCookie("userEmail");
                     window.location.reload();
                   }
             }

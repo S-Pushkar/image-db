@@ -2,9 +2,15 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { getCookie, setCookie } from "cookies-next";
 
 export default function EnterEmailComponent() {
+  const { data: session } = useSession();
   const Router = useRouter();
+  if (session || getCookie("token")) {
+    Router.push("/");
+  }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setInvalidEmail(false);
@@ -28,7 +34,10 @@ export default function EnterEmailComponent() {
       setOtpSent(true);
     } else if (message === "User has no password") {
       setNoPassword(true);
+    } else if (message === "OTP already verified") {
+      Router.push("/enter-password");
     } else {
+      setCookie("userEmail", email, { secure: true, sameSite: "strict", path: "/", maxAge: 5 * 60 });
       Router.push("/enter-otp");
     }
   };
@@ -65,7 +74,8 @@ export default function EnterEmailComponent() {
           </label>
           <button
             type="submit"
-            className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            // className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500"
             onClick={(e) => {
               setInvalidEmail(false);
               setEmailNotFound(false);

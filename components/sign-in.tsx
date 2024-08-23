@@ -36,9 +36,9 @@ export default function SignInComponent() {
       const token = responseData.token;
       const userName = responseData.userName;
       const userEmail = responseData.userEmail;
-      setCookie("token", token);
-      setCookie("userName", userName);
-      setCookie("userEmail", userEmail);
+      setCookie("token", token, { secure: true, sameSite: "strict", path: "/" });
+      setCookie("userName", userName, { secure: true, sameSite: "strict", path: "/" });
+      setCookie("userEmail", userEmail, { secure: true, sameSite: "strict", path: "/" });
       Router.push("/");      
     } else if (responseData.message === "User not found") {
       setEmailNotFound(true);
@@ -98,7 +98,8 @@ export default function SignInComponent() {
           </label>
           <button
             type="submit"
-            className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            // className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500"
             onClick={(e) => {setInvalidEmail(false); setEmailNotFound(false); setPasswordIncorrect(false)}}
           >
             Sign In
