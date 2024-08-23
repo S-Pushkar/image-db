@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -9,12 +9,14 @@ import { getCookie } from "cookies-next";
 export default function EnterOtpComponent() {
   const { data: session } = useSession();
   const Router = useRouter();
-  if (session || getCookie("token")) {
-    Router.push("/");
-  }
-  if (!getCookie("userEmail")) {
-    Router.push("/enter-email");
-  }
+  useEffect(() => {
+    if (session || getCookie("token")) {
+      Router.push("/");
+    }
+    if (!getCookie("userEmail")) {
+      Router.push("/enter-email");
+    }
+  }, [session, Router]);
   const [otp, setOtp] = useState("");
   const [invalidOtp, setInvalidOtp] = useState(false);
   const [otpLimitExceeded, setOtpLimitExceeded] = useState(false);
@@ -86,7 +88,7 @@ export default function EnterOtpComponent() {
     }
   }
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mx-4">
       <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
         <h1 className="font-semibold text-xl">Enter OTP</h1>
         <form
@@ -101,7 +103,7 @@ export default function EnterOtpComponent() {
               renderInput={(props) => <input {...props} />}
               renderSeparator={<span className="text-white mx-1">-</span>}
               containerStyle="flex flex-row justify-center w-full"
-              inputStyle="text-center rounded px-1 w-8 h-8 m-1"
+              inputStyle="text-center rounded px-1 w-8 h-8 m-1 mx-2"
               shouldAutoFocus={true}
               skipDefaultStyles={true}
             />
@@ -114,11 +116,11 @@ export default function EnterOtpComponent() {
               OTP does not exist. OTP may have expired. Please try again.
             </div>
           )}
-            {otpAlreadyVerified && (
-                <div className="text-red-500">
-                User already verified with correct OTP.
-                </div>
-            )}
+          {otpAlreadyVerified && (
+            <div className="text-red-500">
+              User already verified with correct OTP.
+            </div>
+          )}
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,9 +10,11 @@ import { getCookie, setCookie } from "cookies-next";
 export default function SignUpComponent() {
   const { data: session } = useSession();
   const Router = useRouter();
-  if (session || getCookie("token")) {
-    Router.push("/");
-  }
+  useEffect(() => {
+    if (session || getCookie("token")) {
+      Router.push("/");
+    }
+  }, [session, Router]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,19 +51,34 @@ export default function SignUpComponent() {
       return;
     }
     const data = { name, email, password };
-    const response = await fetch(process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-up", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-up",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    );
     const responseData = await response.json();
     if (response.ok) {
       const token = responseData.token;
       const userName = responseData.userName;
       const userEmail = responseData.userEmail;
-      setCookie("userName", userName, { secure: true, sameSite: "strict", path: "/" });
-      setCookie("userEmail", userEmail, { secure: true, sameSite: "strict", path: "/" });
-      setCookie("token", token, { secure: true, sameSite: "strict", path: "/" });
+      setCookie("userName", userName, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+      setCookie("userEmail", userEmail, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+      setCookie("token", token, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
       Router.push("/");
     } else if (responseData.message === "User already exists") {
       setEmailTaken(true);
