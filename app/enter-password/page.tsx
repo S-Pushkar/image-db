@@ -1,9 +1,8 @@
 import React from "react";
+import EnterPasswordComponent from "@/components/enter-password";
 
-export default function EnterPasswordComponent() {
+export default function EnterPassword() {
   return (
-    <div>
-      <h1>Enter Password</h1>
-    </div>
+    <EnterPasswordComponent />
   );
 }
