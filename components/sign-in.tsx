@@ -20,13 +20,14 @@ export default function SignInComponent() {
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [emailNotFound, setEmailNotFound] = useState(false);
   const [passwordIncorrect, setPasswordIncorrect] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEmailNotFound(false);
     setInvalidEmail(false);
     setPasswordIncorrect(false);
     const data = { email, password };
+    setLoading(true);
     const response = await fetch(
       process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-in",
       {
@@ -36,6 +37,7 @@ export default function SignInComponent() {
       }
     );
     const responseData = await response.json();
+    setLoading(false);
     if (response.ok) {
       const token = responseData.token;
       const userName = responseData.userName;
@@ -89,6 +91,7 @@ export default function SignInComponent() {
               autoComplete="email"
               required
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailNotFound && <p className="text-red-500">Email not found</p>}
@@ -103,6 +106,7 @@ export default function SignInComponent() {
               placeholder="****"
               required
               value={password}
+              disabled={loading}
               onChange={(e) => setPassword(e.target.value)}
             />
             {passwordIncorrect && (
@@ -114,7 +118,7 @@ export default function SignInComponent() {
           </label>
           <button
             type="submit"
-            // className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            disabled={loading}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500"
             onClick={(e) => {
               setInvalidEmail(false);

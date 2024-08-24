@@ -17,15 +17,20 @@ export default function EnterEmailComponent() {
     setEmailNotFound(false);
     setOtpSent(false);
     setNoPassword(false);
-    const response = await fetch(process.env.NEXT_PUBLIC_SPRING_API_URL + "/forgot-password/enter-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+    setLoading(true);
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_SPRING_API_URL + "/forgot-password/enter-email",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }
+    );
     const responseJson = await response.json();
     const message = responseJson.message;
+    setLoading(false);
     if (message === "Invalid email") {
       setInvalidEmail(true);
     } else if (message === "User not found") {
@@ -37,7 +42,12 @@ export default function EnterEmailComponent() {
     } else if (message === "OTP already verified") {
       Router.push("/enter-password");
     } else {
-      setCookie("userEmail", email, { secure: true, sameSite: "strict", path: "/", maxAge: 5 * 60 });
+      setCookie("userEmail", email, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 5 * 60,
+      });
       Router.push("/enter-otp");
     }
   };
@@ -46,6 +56,7 @@ export default function EnterEmailComponent() {
   const [emailNotFound, setEmailNotFound] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [noPassword, setNoPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   return (
     <div className="flex flex-col items-center">
       <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
@@ -65,17 +76,20 @@ export default function EnterEmailComponent() {
               autoComplete="email"
               required
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailNotFound && <p className="text-red-500">Email not found</p>}
             {invalidEmail && <p className="text-red-500">Invalid email</p>}
             {otpSent && <p className="text-red-500">OTP already sent</p>}
-            {noPassword && <p className="text-red-500">Please sign in with Google</p>}
+            {noPassword && (
+              <p className="text-red-500">Please sign in with Google</p>
+            )}
           </label>
           <button
             type="submit"
-            // className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500"
+            disabled={loading}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500 disabled:opacity-50"
             onClick={(e) => {
               setInvalidEmail(false);
               setEmailNotFound(false);

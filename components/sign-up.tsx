@@ -24,6 +24,7 @@ export default function SignUpComponent() {
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidName, setInvalidName] = useState(false);
   const [invalidPassword, setInvalidPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,6 +52,7 @@ export default function SignUpComponent() {
       return;
     }
     const data = { name, email, password };
+    setLoading(true);
     const response = await fetch(
       process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-up",
       {
@@ -60,6 +62,7 @@ export default function SignUpComponent() {
       }
     );
     const responseData = await response.json();
+    setLoading(false);
     if (response.ok) {
       const token = responseData.token;
       const userName = responseData.userName;
@@ -122,6 +125,7 @@ export default function SignUpComponent() {
               autoComplete="email"
               required
               value={name}
+              disabled={loading}
               onChange={(e) => setName(e.target.value)}
             />
             {invalidName && <p className="text-red-500">Invalid Name</p>}
@@ -136,6 +140,7 @@ export default function SignUpComponent() {
               autoComplete="email"
               required
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailTaken && (
@@ -152,6 +157,7 @@ export default function SignUpComponent() {
               placeholder="****"
               required
               value={password}
+              disabled={loading}
               onChange={(e) => setPassword(e.target.value)}
             />
             {invalidPassword && (
@@ -167,6 +173,7 @@ export default function SignUpComponent() {
               placeholder="****"
               required
               value={confirmPassword}
+              disabled={loading}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             {passwordNotMatch && (
@@ -175,7 +182,7 @@ export default function SignUpComponent() {
           </label>
           <button
             type="submit"
-            // className="rounded-lg border-2 border-white px-4 md:px-6 py-2 hover:bg-white hover:text-black active:bg-black active:text-white"
+            disabled={loading}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded active:bg-blue-500"
             onClick={(e) => {
               setEmailTaken(false);
