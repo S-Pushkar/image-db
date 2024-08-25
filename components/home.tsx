@@ -10,6 +10,18 @@ export default function HomeComponent() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [token, setToken] = useState("");
+  function handleSignOut() {
+    if (session) {
+      signOut({ redirect: false });
+    } else {
+      deleteCookie("token");
+      deleteCookie("userName");
+      deleteCookie("userEmail");
+      setToken("");
+      setEmail("");
+      setName("");
+    }
+  }
   useEffect(() => {
     if (session) {
       setEmail(session.user?.email || "");
@@ -28,20 +40,7 @@ export default function HomeComponent() {
           <p>
             Signed in as {email}, {name}
           </p>
-          <button
-            onClick={
-              session
-                ? () => signOut()
-                : () => {
-                    deleteCookie("token");
-                    deleteCookie("userName");
-                    deleteCookie("userEmail");
-                    window.location.reload();
-                  }
-            }
-          >
-            Sign out
-          </button>
+          <button onClick={handleSignOut}>Sign out</button>
         </div>
       ) : (
         <div>
