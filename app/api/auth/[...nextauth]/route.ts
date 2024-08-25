@@ -14,14 +14,17 @@ const handler = NextAuth({
         return false;
       }
 
-      const response = await fetch(process.env.SPRING_API_URL + "/auth/nextauth-sign-in", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.name,
-        }),
-      });
+      const response = await fetch(
+        process.env.SPRING_API_URL + "/auth/nextauth-sign-in",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: user.email,
+            name: user.name,
+          }),
+        }
+      );
 
       return response.ok;
     },

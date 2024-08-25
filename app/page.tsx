@@ -1,57 +1,6 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
-import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import React from "react";
+import HomeComponent from "@/components/home";
 
 export default function Home() {
-  const { data: session } = useSession();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [token, setToken] = useState("");
-  useEffect(() => {
-    if (session) {
-      setEmail(session.user?.email || "");
-      setName(session.user?.name || "");
-    } else {
-      setToken(getCookie("token") || "");
-      setEmail(getCookie("userEmail") || "");
-      setName(getCookie("userName") || "");
-    }
-  }, [session]);
-  return (
-    <div>
-      <h1>Home</h1>
-      {session || token ? (
-        <div>
-          <p>
-            Signed in as {email},{" "}
-            {name}
-          </p>
-          <button
-            onClick={
-              session
-                ? () => signOut()
-                : () => {
-                    // setCookie("token", "");
-                    // setCookie("userName", "");
-                    // setCookie("userEmail", "");
-                    deleteCookie("token");
-                    deleteCookie("userName");
-                    deleteCookie("userEmail");
-                    window.location.reload();
-                  }
-            }
-          >
-            Sign out
-          </button>
-        </div>
-      ) : (
-        <div>
-          <p>Not signed in</p>
-          <Link href="/sign-in">Sign in</Link>
-        </div>
-      )}
-    </div>
-  );
+  return <HomeComponent />;
 }
