@@ -81,7 +81,7 @@ export default function EnterPasswordComponent() {
   return (
     <div className="flex flex-col items-center">
       <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
-        <h1 className="font-semibold text-xl">Sign In</h1>
+        <h1 className="font-semibold text-xl">Ener New Password</h1>
         <form
           onSubmit={handleSubmit}
           className="flex flex-col space-y-8 p-8 w-full items-center"

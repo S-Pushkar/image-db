@@ -40,6 +40,12 @@ export default function EnterEmailComponent() {
     } else if (message === "User has no password") {
       setNoPassword(true);
     } else if (message === "OTP already verified") {
+      setCookie("userEmail", email, {
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 5 * 60,
+      });
       Router.push("/enter-password");
     } else {
       setCookie("userEmail", email, {
