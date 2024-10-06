@@ -1,0 +1,3 @@
+[submodule "image_db_backend"]
+	path = image_db_backend
+	url = https://github.com/S-Pushkar/image_db_backend.git
