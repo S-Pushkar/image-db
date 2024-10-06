@@ -1,3 +1,6 @@
 [submodule "image_db_backend"]
 	path = image_db_backend
 	url = https://github.com/S-Pushkar/image_db_backend.git
+[submodule "image_db_ocr"]
+	path = image_db_ocr
+	url = https://github.com/S-Pushkar/image_db_ocr.git
