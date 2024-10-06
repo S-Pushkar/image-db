@@ -4,3 +4,6 @@
 [submodule "image_db_ocr"]
 	path = image_db_ocr
 	url = https://github.com/S-Pushkar/image_db_ocr.git
+[submodule "image_db_query"]
+	path = image_db_query
+	url = https://github.com/S-Pushkar/image_db_query.git
