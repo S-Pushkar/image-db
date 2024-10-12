@@ -1,0 +1,91 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.local
+    ports:
+      - "3000:3000"
+    networks:
+      - image-db
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+    depends_on:
+      - gateway
+
+  kafka:
+    image: apache/kafka:3.8.0
+    ports:
+      - "9092:9092"
+    networks:
+      - image-db
+  mongodb:
+    image: mongo:4.4.6
+    # ports:
+    #   - "27017:27017"
+    networks:
+      - image-db
+
+  gateway:
+    build:
+      context: ../image_db_backend
+      dockerfile: ../image_db_backend/Dockerfile
+    env_file:
+      - ../image_db_backend/.env
+    ports:
+      - "8080:8080"
+    networks:
+      - image-db
+    develop:
+      watch:
+        - action: sync
+          path: ../image_db_backend
+          target: /app
+    depends_on:
+      - image_db_ocr
+      - image_db_query
+      - kafka
+
+  image_db_ocr:
+    build:
+      context: ../image_db_ocr
+      dockerfile: ../image_db_ocr/Dockerfile
+    env_file:
+      - ../image_db_ocr/.env.local
+    # ports:
+    #   - "8000:8000"
+    networks:
+      - image-db
+    develop:
+      watch:
+        - action: sync
+          path: ../image_db_ocr
+          target: /app
+    depends_on:
+      - kafka
+
+  image_db_query:
+    build:
+      context: ../image_db_query
+      dockerfile: ../image_db_query/Dockerfile
+    env_file:
+      - ../image_db_query/.env.local
+    # ports:
+    #   - "8001:8001"
+    networks:
+      - image-db
+    develop:
+      watch:
+        - action: sync
+          path: ../image_db_query
+          target: /app
+    depends_on:
+      - kafka
+    
+networks:
+  image-db:
+    driver: bridge
