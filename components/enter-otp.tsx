@@ -37,7 +37,7 @@ export default function EnterOtpComponent() {
     }
     setLoading(true);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_SPRING_API_URL + "/forgot-password/verify-otp",
+      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/forgot-password/verify-otp",
       {
         method: "POST",
         headers: {
@@ -67,7 +67,7 @@ export default function EnterOtpComponent() {
     setOtpAlreadyVerified(false);
     setLoading(true);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_SPRING_API_URL + "/forgot-password/resend-otp",
+      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/forgot-password/resend-otp",
       {
         method: "POST",
         headers: {

@@ -29,7 +29,7 @@ export default function SignInComponent() {
     const data = { email, password };
     setLoading(true);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-in",
+      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/auth/sign-in",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

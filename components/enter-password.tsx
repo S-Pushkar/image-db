@@ -43,7 +43,7 @@ export default function EnterPasswordComponent() {
     }
     setLoading(true);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_SPRING_API_URL +
+      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) +
         "/forgot-password/reset-password",
       {
         method: "POST",

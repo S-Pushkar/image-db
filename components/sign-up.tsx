@@ -54,7 +54,7 @@ export default function SignUpComponent() {
     const data = { name, email, password };
     setLoading(true);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_SPRING_API_URL + "/auth/sign-up",
+      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/auth/sign-up",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -19,7 +19,7 @@ export default function EnterEmailComponent() {
     setNoPassword(false);
     setLoading(true);
     const response = await fetch(
-      process.env.NEXT_PUBLIC_SPRING_API_URL + "/forgot-password/enter-email",
+      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/forgot-password/enter-email",
       {
         method: "POST",
         headers: {

@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_IS_DOCKER=true
     env_file:
       - .env.local
     ports:
@@ -34,6 +37,10 @@ services:
     build:
       context: ../image_db_backend
       dockerfile: ../image_db_backend/Dockerfile
+    environment:
+      - IS_DOCKER=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MONGODB_URI_DOCKER=mongodb://mongodb:27017/image_db
     env_file:
       - ../image_db_backend/.env
     ports:
@@ -54,6 +61,9 @@ services:
     build:
       context: ../image_db_ocr
       dockerfile: ../image_db_ocr/Dockerfile
+    environment:
+      - IS_DOCKER=true
+      - KAFKA_SERVER_DOCKER=kafka:9092
     env_file:
       - ../image_db_ocr/.env.local
     # ports:
@@ -72,6 +82,8 @@ services:
     build:
       context: ../image_db_query
       dockerfile: ../image_db_query/Dockerfile
+    environment:
+      - IS_DOCKER=true
     env_file:
       - ../image_db_query/.env.local
     # ports:

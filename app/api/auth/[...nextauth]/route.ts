@@ -15,7 +15,7 @@ const handler = NextAuth({
       }
 
       const response = await fetch(
-        process.env.SPRING_API_URL + "/auth/nextauth-sign-in",
+        (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.SPRING_API_URL_DOCKER : process.env.SPRING_API_URL) + "/auth/nextauth-sign-in",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
