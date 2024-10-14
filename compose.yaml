@@ -21,11 +21,18 @@ services:
       - gateway
 
   kafka:
-    image: apache/kafka:3.8.0
+    image: bitnami/kafka:latest
     ports:
       - "9092:9092"
     networks:
       - image-db
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
   mongodb:
     image: mongo:4.4.6
     # ports:
@@ -66,8 +73,8 @@ services:
       - KAFKA_SERVER_DOCKER=kafka:9092
     env_file:
       - ../image_db_ocr/.env.local
-    # ports:
-    #   - "8000:8000"
+    ports:
+      - "8000:8000"
     networks:
       - image-db
     develop:
@@ -86,8 +93,8 @@ services:
       - IS_DOCKER=true
     env_file:
       - ../image_db_query/.env.local
-    # ports:
-    #   - "8001:8001"
+    ports:
+      - "8001:8001"
     networks:
       - image-db
     develop:
