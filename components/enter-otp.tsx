@@ -66,6 +66,10 @@ export default function EnterOtpComponent() {
     setOtpDoesNotExist(false);
     setOtpAlreadyVerified(false);
     setLoading(true);
+    if (otpDoesNotExist || otpDoesNotExistForEmail) {
+      Router.push("/enter-email");
+      return;
+    }
     const response = await fetch(
       (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/forgot-password/resend-otp",
       {
@@ -106,7 +110,7 @@ export default function EnterOtpComponent() {
               onChange={setOtp}
               numInputs={6}
               renderInput={(props) => <input {...props} />}
-              renderSeparator={<span className="text-white mx-1">-</span>}
+              renderSeparator={<span className="text-white mx-1"></span>}
               containerStyle="flex flex-row justify-center mx-2"
               inputStyle="text-center rounded px-1 w-5 h-5 lg:w-8 lg:h-8 md:m-1"
               shouldAutoFocus={true}

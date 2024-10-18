@@ -37,6 +37,7 @@ export default function EnterEmailComponent() {
       setEmailNotFound(true);
     } else if (message === "OTP already sent") {
       setOtpSent(true);
+      Router.push("/enter-otp");
     } else if (message === "User has no password") {
       setNoPassword(true);
     } else if (message === "OTP already verified") {

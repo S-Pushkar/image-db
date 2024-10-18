@@ -1,24 +1,24 @@
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - HOSTNAME=0.0.0.0
-      - NEXT_PUBLIC_IS_DOCKER=true
-    env_file:
-      - .env.local
-    ports:
-      - "3000:3000"
-    networks:
-      - image-db
-    develop:
-      watch:
-        - action: sync
-          path: .
-          target: /app
-    depends_on:
-      - gateway
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - HOSTNAME=0.0.0.0
+  #     - NEXT_PUBLIC_IS_DOCKER=true
+  #   env_file:
+  #     - .env.local
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - image-db
+  #   develop:
+  #     watch:
+  #       - action: sync
+  #         path: .
+  #         target: /app
+  #   depends_on:
+  #     - gateway
 
   kafka:
     image: bitnami/kafka:latest
@@ -39,6 +39,8 @@ services:
     #   - "27017:27017"
     networks:
       - image-db
+    volumes:
+      - mongodb_data:/data/db
 
   gateway:
     build:
@@ -108,3 +110,7 @@ services:
 networks:
   image-db:
     driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
