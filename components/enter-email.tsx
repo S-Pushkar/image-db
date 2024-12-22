@@ -90,7 +90,7 @@ export default function EnterEmailComponent() {
             {invalidEmail && <p className="text-red-500">Invalid email</p>}
             {otpSent && <p className="text-red-500">OTP already sent</p>}
             {noPassword && (
-              <p className="text-red-500">Please sign in with Google</p>
+              <p className="text-red-500">Please sign in with Github</p>
             )}
           </label>
           <button
