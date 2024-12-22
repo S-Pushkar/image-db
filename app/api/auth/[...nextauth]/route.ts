@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 
 const handler = NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID || "",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
     }),
   ],
   callbacks: {
@@ -13,9 +13,10 @@ const handler = NextAuth({
       if (!user?.email) {
         return false;
       }
+      console.log(process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.SPRING_API_URL);
 
       const response = await fetch(
-        (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.SPRING_API_URL_DOCKER : process.env.SPRING_API_URL) + "/auth/nextauth-sign-in",
+        (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.SPRING_API_URL) + "/auth/nextauth-sign-in",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

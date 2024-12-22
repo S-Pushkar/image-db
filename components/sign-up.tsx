@@ -202,7 +202,7 @@ export default function SignUpComponent() {
             signIn("google", { callbackUrl: "http://localhost:3000" })
           }
         >
-          <Image src="/assets/google.svg" width={50} height={50} alt="Google" />
+          <Image src="/assets/github-mark-white.svg" width={50} height={50} alt="Google" />
         </button>
       </div>
       <p className="mb-8">

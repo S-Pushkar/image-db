@@ -35,8 +35,8 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
   mongodb:
     image: mongo:4.4.6
-    # ports:
-    #   - "27017:27017"
+    ports:
+      - "27017:27017"
     networks:
       - image-db
     volumes:
