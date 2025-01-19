@@ -33,6 +33,11 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--list", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   mongodb:
     image: mongo:4.4.6
     ports:
@@ -62,9 +67,12 @@ services:
           path: ../image_db_backend
           target: /app
     depends_on:
-      - image_db_ocr
-      - image_db_query
-      - kafka
+      kafka:
+        condition: service_healthy
+      image_db_ocr:
+        condition: service_started
+      image_db_query:
+        condition: service_started
 
   image_db_ocr:
     build:
@@ -85,7 +93,8 @@ services:
           path: ../image_db_ocr
           target: /app
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
 
   image_db_query:
     build:
@@ -105,7 +114,30 @@ services:
           path: ../image_db_query
           target: /app
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
+
+  image_db_delete:
+    build:
+      context: ../image_db_delete
+      dockerfile: ../image_db_delete/Dockerfile
+    environment:
+      - IS_DOCKER=true
+      - KAFKA_SERVER_DOCKER=kafka:9092
+    env_file:
+      - ../image_db_delete/.env.local
+    ports:
+      - "8002:8002"
+    networks:
+      - image-db
+    develop:
+      watch:
+        - action: sync
+          path: ../image_db_delete
+          target: /app
+    depends_on:
+      kafka:
+        condition: service_healthy
     
 networks:
   image-db:
