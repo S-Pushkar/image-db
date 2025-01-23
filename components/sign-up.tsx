@@ -4,15 +4,25 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { getCookie, setCookie } from "cookies-next";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignUpComponent() {
-  const { data: session } = useSession();
+  const {
+    session,
+    isSignedIn,
+    setIsSignedIn,
+    emailGlobal,
+    setEmailGlobal,
+    nameGlobal,
+    setNameGlobal,
+  } = useAuth();
   const Router = useRouter();
   useEffect(() => {
     if (session || getCookie("token")) {
-      Router.push("/");
+      setIsSignedIn(true);
+      Router.push("/dashboard");
     }
   }, [session, Router]);
   const [name, setName] = useState("");
@@ -54,7 +64,9 @@ export default function SignUpComponent() {
     const data = { name, email, password };
     setLoading(true);
     const response = await fetch(
-      (process.env.NEXT_PUBLIC_IS_DOCKER ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/auth/sign-up",
+      (process.env.NEXT_PUBLIC_IS_DOCKER
+        ? process.env.NEXT_PUBLIC_SPRING_API_URL_DOCKER
+        : process.env.NEXT_PUBLIC_SPRING_API_URL) + "/auth/sign-up",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,7 +94,8 @@ export default function SignUpComponent() {
         sameSite: "strict",
         path: "/",
       });
-      Router.push("/");
+      setIsSignedIn(true);
+      Router.push("/dashboard");
     } else if (responseData.message === "User already exists") {
       setEmailTaken(true);
       setEmail("");
@@ -108,7 +121,7 @@ export default function SignUpComponent() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
+      <div className="md:w-2/5 m-4 h-2/5 bg-gray-800 rounded-3xl p-4 flex flex-col items-center">
         <h1 className="font-semibold text-xl">Sign Up</h1>
         <form
           onSubmit={handleSubmit}
@@ -202,7 +215,12 @@ export default function SignUpComponent() {
             signIn("google", { callbackUrl: "http://localhost:3000" })
           }
         >
-          <Image src="/assets/google_old.svg" width={50} height={50} alt="google" />
+          <Image
+            src="/assets/google_old.svg"
+            width={50}
+            height={50}
+            alt="google"
+          />
         </button>
       </div>
       <p className="mb-8">

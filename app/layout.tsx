@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/session-wrapper";
 import Navbar from "@/components/navbar";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,10 +18,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className="bg-[rgb(25,25,25)] text-white" lang="en">
-      <body className={inter.className}>
-        <Navbar />
-        <SessionWrapper>{children}</SessionWrapper>
+    <html className="bg-gray-900 text-white min-h-screen" lang="en">
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
+        <SessionWrapper>
+          <AuthProvider>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <footer className="bg-gray-800 p-4 text-center">
+              <p className="text-gray-500 text-sm">
+                &copy; 2025 TagMyPic. All rights reserved.
+              </p>
+            </footer>
+          </AuthProvider>
+        </SessionWrapper>
       </body>
     </html>
   );

@@ -66,7 +66,7 @@ export default function EnterEmailComponent() {
   const [loading, setLoading] = useState(false);
   return (
     <div className="flex flex-col items-center">
-      <div className="md:w-2/5 m-4 h-2/5 bg-black rounded-3xl p-4 flex flex-col items-center">
+      <div className="md:w-2/5 m-4 h-2/5 bg-gray-800 rounded-3xl p-4 flex flex-col items-center">
         <h1 className="font-semibold text-xl">Enter your email</h1>
         <form
           onSubmit={handleSubmit}
@@ -90,7 +90,7 @@ export default function EnterEmailComponent() {
             {invalidEmail && <p className="text-red-500">Invalid email</p>}
             {otpSent && <p className="text-red-500">OTP already sent</p>}
             {noPassword && (
-              <p className="text-red-500">Please sign in with Github</p>
+              <p className="text-red-500">Please sign in with Google</p>
             )}
           </label>
           <button
