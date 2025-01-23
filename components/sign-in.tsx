@@ -133,10 +133,10 @@ export default function SignInComponent() {
         <button
           className="rounded-full m-4"
           onClick={() =>
-            signIn("github", { callbackUrl: "http://localhost:3000" })
+            signIn("google", { callbackUrl: "http://localhost:3000" })
           }
         >
-          <Image src="/assets/github-mark-white.svg" width={50} height={50} alt="Github" />
+          <Image src="/assets/google_old.svg" width={50} height={50} alt="google" />
         </button>
       </div>
       <p>
