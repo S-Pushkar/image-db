@@ -3,8 +3,18 @@
 import React, { useState } from "react";
 import PhotoGrid from "./photo-grid";
 import QueryInterface from "./query-interface";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
+  const { session, isSignedIn, setIsSignedIn, emailGlobal, setEmailGlobal, nameGlobal, setNameGlobal } = useAuth();
+
+  if (!isSignedIn) {
+    return <div className="bg-gray-900 text-gray-200 flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-4xl font-bold">You are not signed in!</h1>
+      <p className="text-lg">Please sign in to view this page.</p>
+    </div>;
+  }
+
   const [queryMode, setQueryMode] = useState(true);
 
   return (
