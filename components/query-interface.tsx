@@ -12,13 +12,10 @@ export default function QueryInterface() {
     if (!input.trim()) return;
     setMessages([...messages, { sender: "user", text: input }]);
     setInput("");
-
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Here is the pic related to your query!" },
-      ]);
-    }, 1000);
+    setMessages((prev) => [
+      ...prev,
+      { sender: "bot", text: "Here is the pic related to your query!" },
+    ]);
   };
 
   return (
@@ -41,11 +38,15 @@ export default function QueryInterface() {
           </div>
         ))}
       </div>
-      <div className="flex p-4 bg-gray-800 sticky bottom-0 rounded-lg">
+      <form
+        className="flex md:p-4 bg-gray-800 sticky bottom-0 rounded-lg"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <input
           className="flex-1 bg-gray-700 text-gray-200 p-3 rounded-l-lg focus:outline-none"
           placeholder="Type your query..."
           value={input}
+          autoFocus
           onChange={(e) => setInput(e.target.value)}
         />
         <button
@@ -54,7 +55,7 @@ export default function QueryInterface() {
         >
           Send
         </button>
-      </div>
+      </form>
     </div>
   );
 }
