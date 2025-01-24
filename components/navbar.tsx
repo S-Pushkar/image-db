@@ -40,20 +40,20 @@ export default function Navbar() {
         <div className="space-x-4">
           {isSignedIn ? (
             <Link href="/dashboard">
-              <p className="text-lg active:text-teal-500 hover:text-teal-400">
+              <p className="text-lg active:text-teal-500 text-teal-400">
                 Dashboard
               </p>
             </Link>
           ) : (
             <Link href="/sign-in">
-              <p className="text-lg active:text-teal-500 hover:text-teal-400">
+              <p className="text-lg active:text-teal-500 text-teal-400">
                 Sign In
               </p>
             </Link>
           )}
           {isSignedIn ? (
             <button
-              className="text-lg active:text-teal-500 hover:text-teal-400"
+              className="text-lg active:text-teal-500 text-teal-400"
               onClick={handleSignOut}
             >
               Sign Out
