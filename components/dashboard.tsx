@@ -6,16 +6,21 @@ import QueryInterface from "./query-interface";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
-  const { session, isSignedIn, setIsSignedIn, emailGlobal, setEmailGlobal, nameGlobal, setNameGlobal } = useAuth();
+  const { session, isSignedIn, loading } = useAuth();
+  const [queryMode, setQueryMode] = useState(true);
 
-  if (!isSignedIn) {
-    return <div className="bg-gray-900 text-gray-200 flex flex-col items-center justify-center min-h-screen">
-      <h1 className="md:text-4xl text-xl font-bold">You are not signed in!</h1>
-      <p className="md:text-lg">Please sign in to view this page.</p>
-    </div>;
+  if (loading) {
+    return <div className="bg-gray-900 min-h-screen"></div>;
   }
 
-  const [queryMode, setQueryMode] = useState(true);
+  if (!isSignedIn) {
+    return (
+      <div className="bg-gray-900 text-gray-200 flex flex-col items-center justify-center min-h-screen">
+        <h1 className="md:text-4xl text-xl font-bold">You are not signed in!</h1>
+        <p className="md:text-lg">Please sign in to view this page.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-900 text-gray-200 flex">

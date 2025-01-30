@@ -12,6 +12,7 @@ interface AuthContextType {
   nameGlobal: string;
   setNameGlobal: (name: string) => void;
   session?: any;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,12 +22,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [emailGlobal, setEmailGlobal] = useState("");
   const [nameGlobal, setNameGlobal] = useState("");
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "loading") {
+      setLoading(true);
+    } else if (status === "authenticated") {
       setIsSignedIn(true);
       setEmailGlobal(session?.user?.email || "");
       setNameGlobal(session?.user?.name || "");
+      setLoading(false);
     } else if (status === "unauthenticated") {
       const tokenCookie = getCookie("token");
       const userEmail = getCookie("userEmail");
@@ -41,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setEmailGlobal("");
         setNameGlobal("");
       }
+      setLoading(false);
     }
   }, [session, status]);
 
@@ -54,6 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setEmailGlobal,
         nameGlobal,
         setNameGlobal,
+        loading,
       }}
     >
       {children}
