@@ -85,7 +85,7 @@ export default function HomeComponent() {
         </section>
 
         {/* CTA Section */}
-        <section className="text-center bg-blue-600 text-white rounded-3xl p-12">
+        {/* <section className="text-center bg-blue-600 text-white rounded-3xl p-12">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-xl mb-8 text-blue-100">Join thousands of users who trust TagMyPic for their image organization needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -96,7 +96,7 @@ export default function HomeComponent() {
               Learn More
             </button>
           </div>
-        </section>
+        </section> */}
       </main>
     </div>
   );
