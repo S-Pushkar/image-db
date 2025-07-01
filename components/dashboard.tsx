@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Search, Upload } from "lucide-react";
 import { getCookie } from "cookies-next";
 
+const endpoint = process.env.NEXT_PUBLIC_SPRING_API_URL || 'http://localhost:8080/api';
+
 export default function Dashboard() {
   const { isSignedIn, loading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,7 +26,7 @@ export default function Dashboard() {
 
   async function fetchAllImages() {
     try {
-      const response = await fetch('http://localhost:8080/api/fetch-all-images', {
+      const response = await fetch(endpoint + '/fetch-all-images', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ export default function Dashboard() {
     formData.append('image', file);
 
     try {
-      const response = await fetch('http://localhost:8080/api/gateway/upload-image', {
+      const response = await fetch(endpoint + '/gateway/upload-image', {
         method: 'POST',
         body: formData
       });
@@ -75,7 +77,7 @@ export default function Dashboard() {
 
     setIsSearching(true);
     try {
-      const response = await fetch('http://localhost:8080/api/gateway/query-image', {
+      const response = await fetch(endpoint + '/gateway/query-image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +100,7 @@ export default function Dashboard() {
 
   async function handleDeleteImage(imageName: string) {
     try {
-      const response = await fetch('http://localhost:8080/api/delete-image', {
+      const response = await fetch(endpoint + '/delete-image', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
